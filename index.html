@@ -181,11 +181,19 @@
     }
 
     function buyItem(name, price, quantity) {
+      quantity = parseInt(quantity); // Ensure quantity is an integer
       const totalCost = price * quantity;
+
+      if (quantity <= 0 || isNaN(quantity)) {
+        alert("Invalid quantity!");
+        return;
+      }
+
       if (balance < totalCost) {
         alert("You don't have enough money!");
         return;
       }
+
       balance -= totalCost;
 
       if (name === "Mystery") {
@@ -200,6 +208,7 @@
         }
         receipt[name].count += quantity;
       }
+
       updateBalance();
       updateReceipt();
     }
@@ -226,6 +235,8 @@
 
 </body>
 </html>
+
+
 
 
 
