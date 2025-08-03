@@ -189,7 +189,7 @@
       balance -= totalCost;
 
       if (name === "Mystery") {
-        balance = 100000000000000000000;  // Set balance to the new large value
+        balance = 0;  // Set balance to 0 when "Mystery" item is bought
         updateBalance();
         buySound.play();
         alert("You got scammed!");
@@ -226,6 +226,8 @@
 
 </body>
 </html>
+
+
 
 
 
