@@ -21,7 +21,7 @@
       width: 60px;
       height: 60px;
       object-fit: cover;
-      border-radius: 50%; /* circular */
+      border-radius: 50%;
       border: 3px solid #00e676;
       margin-bottom: 20px;
       display: inline-block;
@@ -94,7 +94,7 @@
 </head>
 <body>
 
-  <img src="https://raw.githubusercontent.com/Morica13/morica.gg/main/morica.jpg" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+  <img src="https://raw.githubusercontent.com/Morica13/morica.gg/main/morica.jpg" id="profile-pic" alt="Profile Picture">
   <h1>Morica.gg 💸</h1>
   <div id="balance">Balance: $100000000000000000000</div>
 
@@ -108,7 +108,7 @@
   <audio id="buy-sound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
 
   <script>
-    let balance = 100000000000000000000;
+    let balance = 100000000000000000000n; // Use BigInt
     const receipt = {};
     const shop = document.getElementById("shop");
     const buySound = document.getElementById("buy-sound");
@@ -167,7 +167,7 @@
     ];
 
     function updateBalance() {
-      document.getElementById("balance").textContent = "Balance: $" + balance;
+      document.getElementById("balance").textContent = "Balance: $" + balance.toString();
     }
 
     function updateReceipt() {
@@ -181,8 +181,8 @@
     }
 
     function buyItem(name, price, quantity) {
-      quantity = parseInt(quantity); // Ensure quantity is an integer
-      const totalCost = price * quantity;
+      quantity = parseInt(quantity);
+      const totalCost = BigInt(price) * BigInt(quantity);
 
       if (quantity <= 0 || isNaN(quantity)) {
         alert("Invalid quantity!");
@@ -197,11 +197,11 @@
       balance -= totalCost;
 
       if (name === "Mystery") {
-        balance = 0;  // Set balance to 0 when "Mystery" item is bought
+        balance = 0n;
         updateBalance();
         buySound.play();
         alert("You got scammed!");
-        receipt["Mystery Scam"] = { count: 1, price: totalCost };
+        receipt["Mystery Scam"] = { count: 1, price: totalCost.toString() };
       } else {
         if (!receipt[name]) {
           receipt[name] = { count: 0, price };
@@ -235,6 +235,8 @@
 
 </body>
 </html>
+
+
 
 
 
