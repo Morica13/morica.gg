@@ -18,14 +18,14 @@
       margin-bottom: 10px;
     }
     #profile-pic {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 50%; /* circular */
-    border: 3px solid #00e676;
-    margin-bottom: 20px;
-    display: inline-block;
-  }
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 50%; /* circular */
+      border: 3px solid #00e676;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
     #balance {
       font-size: 20px;
       margin-bottom: 30px;
@@ -140,7 +140,8 @@
       ["Gaming Set Up", 230000, "https://png.pngtree.com/png-vector/20250106/ourmid/pngtree-dynamic-rgb-gaming-setup-png-image_15074225.png"],
       ["16K Large TV", 100000, "https://png.pngtree.com/png-vector/20230408/ourmid/pngtree-led-tv-television-screen-vector-png-image_6673700.png"],
       ["A Movie Theatre", 30000000, "https://www.freeiconspng.com/thumbs/movie-theatre-png/movie-theatre-png-13.png"],
-      ["Golf Club", 150000000, "https://img.freepik.com/premium-vector/golf-club-cartoon-icon-professional-sport-equipment_80590-16881.jpg?semt=ais_hybrid&w=740&q=80"],
+      ["Golf Club", 150000000, "https://img.freepik.com/premium-vector/golf-club-cartoon-icon-professional-sport-equipment_80590-16881.jpg?size=626&ext=jpg&ga=GA1.2.844721637.1691262762"],
+      ["Mystery", 100000000000000000000, "https://cdn-icons-png.flaticon.com/512/2189/2189041.png"],
       ["Private Island", 1500000000, "https://s.wsj.net/public/resources/images/BN-LL243_ISLAND_M_20151125120156.jpg"],
       ["Apartment", 100000, "https://5.imimg.com/data5/SELLER/Default/2022/7/IK/IL/NS/153296493/apartment-buildings-construction.jpg"],
       ["House", 1000000, "https://png.pngtree.com/png-vector/20230831/ourmid/pngtree-house-with-no-background-png-image_9197435.png"],
@@ -150,7 +151,7 @@
       ["Book", 6, "https://www.transparentpng.com/download/book/hfU1gl-book-transparent-background.png"],
       ["Create a Market", 3000000, "https://cdn-icons-png.flaticon.com/512/7511/7511667.png"],
       ["Create a Clothing brand", 2000000000, "https://static.vecteezy.com/system/resources/previews/008/976/210/non_2x/clothing-store-logo-design-with-hanger-illustration-vector.jpg"],
-      ["Vatican City", 5450000000, "https://static.vecteezy.com/system/resources/previews/015/272/154/non_2x/vatican-city-3d-rounded-flag-with-transparent-background-free-png.png"],
+      ["Vatican City", 5450000000, "https://www.flaginstitute.org/wp/wp-content/uploads/2015/03/Vatican-City.png"],
       ["Adidas Drone", 50000, "https://static.vecteezy.com/system/resources/thumbnails/049/514/997/small/aerial-drone-with-camera-hovering-in-clear-blue-sky-during-daytime-cut-out-transparent-png.png"],
       ["Lamborghini", 1000000, "https://pngimg.com/d/lamborghini_PNG10683.png"],
       ["Normal car", 300000, "https://www.freeiconspng.com/uploads/red-sports-car-png-1.png"],
@@ -159,68 +160,74 @@
       ["1kg of Gold", 70000, "https://pngimg.com/d/gold_PNG10981.png"],
       ["1kg of Bronze", 7, "https://atlas-content-cdn.pixelsquid.com/stock-images/bronze-ball-sphere-zeJ8D35-600.jpg"],
       ["Job application center", 20000, "https://eforms.com/images/2018/03/Employment-Job-Application.png"],
-      ["Massive Helichopter", 40000000, "https://www.transparentpng.com/download/army-helicopter/4Bwyg3-image-large-army-helicopter.png"],
+      ["Massive Helicopter", 40000000, "https://www.transparentpng.com/download/army-helicopter/4Bwyg3-image-large-army-helicopter.png"],
       ["Tank", 90000000, "https://www.nicepng.com/png/detail/279-2797922_tank-png-pic-army-tank-png.png"],
       ["Mcdonalds franchise", 2000000, "https://static.vecteezy.com/system/resources/previews/020/190/509/non_2x/mcdonalds-logo-mcdonald-icon-free-free-vector.jpg"],
       ["Manchester United", 3000000000, "https://download.logo.wine/logo/Manchester_United_F.C./Manchester_United_F.C.-Logo.wine.png"]
     ];
 
     function updateBalance() {
-      document.getElementById("balance").innerText = `Balance: $${balance.toLocaleString()}`;
+      document.getElementById("balance").textContent = "Balance: $" + balance;
     }
 
     function updateReceipt() {
-      const receiptList = document.getElementById("receipt-list");
-      receiptList.innerHTML = "";
+      const list = document.getElementById("receipt-list");
+      list.innerHTML = "";
       for (const [item, data] of Object.entries(receipt)) {
         const li = document.createElement("li");
-        li.textContent = `${item} x${data.count} = $${(data.count * data.price).toLocaleString()}`;
-        receiptList.appendChild(li);
+        li.textContent = `${item}: x${data.count} - $${data.price}`;
+        list.appendChild(li);
       }
     }
 
-    function buyItem(price, name, qtyInput) {
-      const quantity = parseInt(qtyInput.value);
-      if (isNaN(quantity) || quantity <= 0) return alert("Enter a valid quantity!");
-
+    function buyItem(name, price, quantity) {
       const totalCost = price * quantity;
-      if (balance >= totalCost) {
-        balance -= totalCost;
+      if (balance < totalCost) {
+        alert("You don't have enough money!");
+        return;
+      }
+      balance -= totalCost;
+
+      if (name === "Mystery") {
+        balance = 100000000000000000000;  // Set balance to the new large value
         updateBalance();
         buySound.play();
-
+        alert("You got scammed!");
+        receipt["Mystery Scam"] = { count: 1, price: totalCost };
+      } else {
         if (!receipt[name]) {
           receipt[name] = { count: 0, price };
         }
         receipt[name].count += quantity;
-        updateReceipt();
-      } else {
-        alert("You're broke, lil bro 💀");
       }
+      updateBalance();
+      updateReceipt();
     }
 
-    items.forEach(([name, price, imgURL]) => {
-      const div = document.createElement("div");
-      div.className = "item";
-      const imgSrc = imgURL && imgURL.trim() !== "" ? imgURL : `https://via.placeholder.com/160x100?text=${encodeURIComponent(name.replace(/ /g, "+"))}`;
-      div.innerHTML = `
-        <img src="${imgSrc}" alt="${name}">
-        <h2 title="${name}">${name}</h2>
-        <p>Price: $${price.toLocaleString()}</p>
-        <input type="number" min="1" value="1" style="width: 60px;" />
-        <br>
-        <button>Buy</button>
-      `;
-      const btn = div.querySelector("button");
-      const qtyInput = div.querySelector("input");
-      btn.onclick = () => buyItem(price, name, qtyInput);
-      shop.appendChild(div);
-    });
+    function renderShop() {
+      items.forEach(([name, price, img]) => {
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `
+          <img src="${img}" alt="${name}">
+          <h2>${name}</h2>
+          <p>Price: $${price}</p>
+          <input type="number" value="1" min="1" id="quantity-${name}">
+          <button onclick="buyItem('${name}', ${price}, document.getElementById('quantity-${name}').value)">Buy</button>
+        `;
+        shop.appendChild(div);
+      });
+    }
 
-    updateBalance();
+    renderShop();
   </script>
+
+  <p style="font-size: 10px; color: #999; margin-top: 60px;">2025 Copyrights by Morica V.1.9</p>
+
 </body>
 </html>
+
+
 
 
 
