@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link href="https://fonts.googleapis.com/css2?family=Prince+Fog&display=swap" rel="stylesheet" />
+<title>Morica.gg 💸</title>
+<style>
+body {
+    font-family: 'Prince Fog', cursive, sans-serif;
+    background: #121212;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+}
+h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+#profile-pic {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #00e676;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+#balance {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+.shop {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+.item {
+    width: 160px;
+    background: #1e1e1e;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    padding: 10px;
+    text-align: center;
+    transition: 0.3s;
+    color: #c8e6c9;
+    font-size: 14px;
+}
+.item:hover {
+    transform: scale(1.05);
+}
+.item img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.item h2 {
+    font-size: 16px;
+    margin: 8px 0 4px;
+    height: 38px;
+    overflow: hidden;
+}
+.item p, .item input {
+    margin: 4px 0;
+}
+.item button {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background: #00e676;
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#receipt {
+    margin-top: 40px;
+    background: #263238;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+#receipt h2 {
+    text-align: center;
+    color: #76ff03;
+}
+footer {
+    margin-top: 40px;
+    font-size: 10px;
+    color: #aaa;
+}
+</style>
+</head>
+<body>
+<img src="https://raw.githubusercontent.com/Morica13/morica.gg/main/morica.jpg" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+<h1>Morica.gg 💸</h1>
+<div id="balance">Balance: $100000000000000</div>
+<div class="shop" id="shop"></div>
+<div id="receipt">
+    <h2>🧾 Receipt</h2>
+    <ul id="receipt-list"></ul>
+</div>
+<audio id="buy-sound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+
+<script>
+let balance = 100000000000000;
+const receipt = {};
+const shop = document.getElementById("shop");
+const buySound = document.getElementById("buy-sound");
+
+const items = [
+    ["Big Mac", 5, "https://upload.wikimedia.org/wikipedia/commons/4/4d/Big_Mac.png"],
+    ["Coke", 1, "https://png.pngtree.com/png-clipart/20231116/original/pngtree-coca-cola-bottled-drink-isolated-photo-png-image_13575918.png"],
+    ["Lottery", 1, "https://www.pikpng.com/pngl/b/192-1921412_lotto-ticket-clipart-png-download-transparent-png.png"],
+    ["Spotify Premium ∞", 1000, "https://www.logo.wine/a/logo/Spotify/Spotify-Icon-Logo.wine.svg"],
+    ["Netflix Premium ∞", 10000, "https://static.vecteezy.com/system/resources/previews/019/956/195/non_2x/netflix-transparent-netflix-free-free-png.png"],
+    ["F1 Red Racer", 100000, "https://atlas-content-cdn.pixelsquid.com/stock-images/f1-car-2021-formula-1-o00M2nF-600.jpg"],
+    ["Yacht", 1000000, "https://www.pngplay.com/wp-content/uploads/2/Yacht-PNG-Photos.png"],
+    ["Adidas Company", 13000000000, "https://download.logo.wine/logo/Adidas/Adidas-Logo.wine.png"],
+    ["iPhone 16 Pro Max", 1511, "https://www.ourfriday.co.uk/image/cache/catalog/Apple/apple-iphone-16-promax-dessert-1-800x800.png"],
+    ["A Painting", 10, "https://www.pikpng.com/pngl/m/575-5750533_framed-painting-png-vincent-van-gogh-clipart.png"],
+    ["Tesla", 10000000, "https://www.pngarts.com/files/11/Tesla-Model-S-PNG-Background-Image.png"],
+    ["Newton's Cradle", 10, "https://atlas-content-cdn.pixelsquid.com/stock-images/7-ball-newton-cradle-w7xRrXE-600.jpg"],
+    ["A Private Jet", 5000000, "https://img.freepik.com/free-psd/airplane-flying-isolated_23-2151364260.jpg"],
+    ["Jazeera Airways", 20000000000, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLIJDzsRvhFIwurziMr3MKlD5C4owbGjv4BA&s"],
+    ["UNO", 6, "https://fontanapharmacy.com/product_images/f/225/UNO_Box__25282_zoom.png"],
+    ["Happy Meal", 8, "https://cdn1.iconfinder.com/data/icons/mc-donalds-menu/512/Fast_Food-02-512.png"],
+    ["Make a Movie", 10000, "https://static.vecteezy.com/system/resources/thumbnails/010/286/336/small_2x/realistic-open-movie-clapper-open-isolated-on-transparent-background-shown-slate-board-png.png"],
+    ["Limosine", 1000000, "https://images.squarespace-cdn.com/content/v1/61c64bc5b8833a68db282ddc/1640467934637-93ADR0LS72VIT0XPPVBH/concord-lincoln-10-passeger-limo-exterior.png"],
+    ["Plant", 20, "https://png.pngtree.com/png-vector/20240207/ourmid/pngtree-indoor-plant-flowerpot-png-image_11669796.png"],
+    ["Garden", 599, "https://static.vecteezy.com/system/resources/thumbnails/055/081/067/small_2x/lush-garden-landscape-with-green-shrubs-and-blooming-flowers-png.png"],
+    ["AirPods Series", 56000, "https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/24010749/AirPods_Comparison_Press_Image.jpg?quality=90&strip=all&crop=0,0,100,100"],
+    ["10% Apple share", 1000000, "https://www.courtroommail.com/wp-content/uploads/2021/08/Apple-Logo-black.png"],
+    ["Comfy Chair", 30, "https://png.pngtree.com/png-vector/20231019/ourmid/pngtree-blue-sofa-comfortable-chair-decoration-png-image_10277544.png"],
+    ["Gaming Set Up", 230000, "https://png.pngtree.com/png-vector/20250106/ourmid/pngtree-dynamic-rgb-gaming-setup-png-image_15074225.png"],
+    ["16K Large TV", 100000, "https://png.pngtree.com/png-vector/20230408/ourmid/pngtree-led-tv-television-screen-vector-png-image_6673700.png"],
+    ["A Movie Theatre", 30000000, "https://www.freeiconspng.com/thumbs/movie-theatre-png/movie-theatre-png-13.png"],
+    ["Golf Club", 150000000, "https://img.freepik.com/premium-vector/golf-club-cartoon-icon-professional-sport-equipment_80590-16881.jpg?semt=ais_hybrid&w=740&q=80"],
+    ["Private Island", 1500000000, "https://s.wsj.net/public/resources/images/BN-LL243_ISLAND_M_20151125120156.jpg"],
+    ["Apartment", 100000, "https://5.imimg.com/data5/SELLER/Default/2022/7/IK/IL/NS/153296493/apartment-buildings-construction.jpg"],
+    ["House", 1000000, "https://png.pngtree.com/png-vector/20230831/ourmid/pngtree-house-with-no-background-png-image_9197435.png"],
+    ["Mansion", 5000000, "https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-elegant-modern-mansion-with-parked-car-illustration-png-image_12509753.png"],
+    ["B2", 2000000000, "https://atlas-content-cdn.pixelsquid.com/stock-images/b-2-spirit-stealth-bomber-PO4AewE-600.jpg"],
+    ["7-11 store", 1163000, "https://play-lh.googleusercontent.com/2D4K14n5mDU2IE8904HHemkf2H7RVMvdiDSpSOF5chVtKEmpNi8eC3xCbY82kjtXozZx"],
+    ["Book", 6, "https://www.transparentpng.com/download/book/hfU1gl-book-transparent-background.png"],
+    ["Create a Market", 3000000, "https://cdn-icons-png.flaticon.com/512/7511/7511667.png"],
+    ["Create a Clothing brand", 2000000000, "https://static.vecteezy.com/system/resources/previews/008/976/210/non_2x/clothing-store-logo-design-with-hanger-illustration-vector.jpg"],
+    ["Vatican City", 5450000000, "https://static.vecteezy.com/system/resources/previews/015/272/154/non_2x/vatican-city-3d-rounded-flag-with-transparent-background-free-png.png"],
+    ["Adidas Drone", 50000, "https://static.vecteezy.com/system/resources/thumbnails/049/514/997/small/aerial-drone-with-camera-hovering-in-clear-blue-sky-during-daytime-cut-out-transparent-png.png"],
+    ["Lamborghini", 1000000, "https://pngimg.com/d/lamborghini_PNG10683.png"],
+    ["Normal car", 300000, "https://www.freeiconspng.com/uploads/red-sports-car-png-1.png"],
+    ["Fashion designer", 600000, "https://img.lovepik.com/free-png/20220126/lovepik-fashionable-male-fashion-designer-png-image_401805581_wh1200.png"],
+    ["1kg of Diamonds", 50000000, "https://www.pngall.com/wp-content/uploads/2016/04/Diamond-Free-Download-PNG.png"],
+    ["1kg of Gold", 70000, "https://pngimg.com/d/gold_PNG10981.png"],
+    ["1kg of Bronze", 7, "https://atlas-content-cdn.pixelsquid.com/stock-images/bronze-ball-sphere-zeJ8D35-600.jpg"],
+    ["Job application center", 20000, "https://eforms.com/images/2018/03/Employment-Job-Application.png"],
+    ["Massive Helichopter", 40000000, "https://www.transparentpng.com/download/army-helicopter/4Bwyg3-image-large-army-helicopter.png"],
+    ["Tank", 90000000, "https://www.nicepng.com/png/detail/279-2797922_tank-png-pic-army-tank-png.png"],
+    ["Mcdonalds franchise", 2000000, "https://static.vecteezy.com/system/resources/previews/020/190/509/non_2x/mcdonalds-logo-mcdonald-icon-free-free-vector.jpg"],
+    ["Manchester United", 3000000000, "https://download.logo.wine/logo/Manchester_United_F.C./Manchester_United_F.C.-Logo.wine.png"],
+
+    // Mystery item (Scam)
+    ["Mystery", 100000000000000, "https://upload.wikimedia.org/wikipedia/commons/5/59/Question_mark_white_icon.svg"]
+];
+
+function updateBalance() {
+    document.getElementById("balance").innerText = `Balance: $${balance.toLocaleString()}`;
+}
+
+function updateReceipt() {
+    const receiptList = document.getElementById("receipt-list");
+    receiptList.innerHTML = "";
+    for (const [item, data] of Object.entries(receipt)) {
+        let displayName = item === "Mystery" ? "Scam" : item;
+        const li = document.createElement("li");
+        li.textContent = `${displayName} x${data.count} = $${(data.count * data.price).toLocaleString()}`;
+        receiptList.appendChild(li);
+    }
+}
+
+function buyItem(price, name, qtyInput) {
+    const quantity = parseInt(qtyInput.value);
+    if (isNaN(quantity) || quantity <= 0) return alert("Enter a valid quantity!");
+    const totalCost = price * quantity;
+    if (balance >= totalCost) {
+        balance -= totalCost;
+        updateBalance();
+        buySound.play();
+        if (!receipt[name]) {
+            receipt[name] = { count: 0, price };
+        }
+        receipt[name].count += quantity;
+        updateReceipt();
+
+        // Special message for Mystery item
+        if (name === "Mystery") {
+            alert("You got scammed!");
+        }
+
+    } else {
+        alert("You're broke, lil bro 💀");
+    }
+}
+
+items.forEach(([name, price, imgURL]) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    const imgSrc = imgURL && imgURL.trim() !== "" ? imgURL : `https://via.placeholder.com/160x100?text=${encodeURIComponent(name.replace(/ /g, "+"))}`;
+    div.innerHTML = `
+        <img src="${imgSrc}" alt="${name}">
+        <h2 title="${name}">${name}</h2>
+        <p>Price: $${price.toLocaleString()}</p>
+        <input type="number" min="1" value="1" style="width: 60px;" />
+        <br>
+        <button>Buy</button>
+    `;
+    const btn = div.querySelector("button");
+    const qtyInput = div.querySelector("input");
+    btn.onclick = () => buyItem(price, name, qtyInput);
+    shop.appendChild(div);
+});
+
+updateBalance();
+</script>
+
+<footer>
+    2025 Copyrights by Morica V.1.9
+</footer>
+</body>
+</html>
+
